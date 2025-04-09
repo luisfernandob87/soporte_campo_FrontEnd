@@ -1,0 +1,15 @@
+.store-container {
+  padding: 2rem;
+}
+
+.store-container h2 {
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.store-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
