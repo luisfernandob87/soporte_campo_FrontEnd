@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import L from 'leaflet';
 import { API_BASE_URL } from '../../config';
 import kfcLogo from '../../assets/kfc_logo.svg';
-import pizzaHutLogo from '../../assets/pizza_hut_logo.svg';
+import pizzaHutLogo from '../../assets/pizza_hut_logo.png';
 import starbucksLogo from '../../assets/starbucks_logo.svg';
 import wendysLogo from '../../assets/wendys_logo.svg';
 import { format } from 'date-fns';
