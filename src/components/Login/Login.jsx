@@ -1,20 +1,26 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import './Login.css';
+import logo from '../../assets/premium_logo.webp';
 
 export function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const { login, error } = useAuth();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    login(username, password);
+    const success = await login(username, password);
+    if (!success) {
+      // El error ya está manejado en el contexto
+      return;
+    }
   };
 
   return (
     <div className="login-container">
       <div className="login-box">
+        <img src={logo} alt="Logo" className="login-logo" />
         <h2>Iniciar Sesión</h2>
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">

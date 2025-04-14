@@ -1,6 +1,6 @@
-.navigation {
-  margin: 2rem 0;
-}
+/* .navigation {
+  margin: 0 0;
+} */
 
 .nav-buttons {
   display: grid;
@@ -14,8 +14,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
-  background-color: #646cff;
+  /* padding: 1rem; */
+  background-color: #007AFF;
   color: white;
   text-decoration: none;
   border-radius: 8px;
@@ -23,11 +23,11 @@
   transition: all 0.3s ease;
   text-align: center;
   height: 100%;
-  min-height: 60px;
+  min-height: 40px;
 }
 
 .nav-button:hover {
-  background-color: #5158cc;
+  background-color: #007AFF;
   transform: translateY(-2px);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }

@@ -5,15 +5,32 @@ const AuthContext = createContext();
 export function AuthProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState('');
+  const [token, setToken] = useState(localStorage.getItem('token'));
 
-  const login = (username, password) => {
-    // Credenciales temporales mientras se desarrolla el backend
-    if (username === 'admin' && password === 'admin') {
-      setIsAuthenticated(true);
-      setError('');
-      return true;
-    } else {
-      setError('Credenciales inválidas');
+  const login = async (username, password) => {
+    try {
+      const response = await fetch('http://localhost:4000/api/v1/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ usuario: username, password })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setToken(data.token);
+        localStorage.setItem('token', data.token);
+        setIsAuthenticated(true);
+        setError('');
+        return true;
+      } else {
+        setError(data.message || 'Error al iniciar sesión');
+        return false;
+      }
+    } catch (err) {
+      setError('Error de conexión');
       return false;
     }
   };
