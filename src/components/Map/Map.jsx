@@ -38,6 +38,13 @@ const icons = {
 function Map() {
   const [tiendas, setTiendas] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
+  const [capaVisible, setCapaVisible] = useState({
+    'KFC': true,
+    'Pizza Hut': true,
+    'Starbucks': true,
+    "Wendy's": true,
+    'Usuarios': true
+  });
 
   const userIcon = L.icon({
     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
@@ -78,8 +85,34 @@ function Map() {
     fetchUsuarios();
   }, []);
 
+  const toggleCapa = (cadena) => {
+    setCapaVisible(prev => ({
+      ...prev,
+      [cadena]: !prev[cadena]
+    }));
+  };
+
   return (
     <div className="map-container">
+      <div className="layer-controls">
+        {Object.keys(icons).map(cadena => (
+          <button
+            key={cadena}
+            className={`layer-button ${capaVisible[cadena] ? 'active' : ''}`}
+            onClick={() => toggleCapa(cadena)}
+          >
+            <img src={icons[cadena].options.iconUrl} alt={cadena} />
+            {cadena}
+          </button>
+        ))}
+        <button
+          className={`layer-button ${capaVisible['Usuarios'] ? 'active' : ''}`}
+          onClick={() => toggleCapa('Usuarios')}
+        >
+          <img src={userIcon.options.iconUrl} alt="Usuarios" />
+          Usuarios
+        </button>
+      </div>
       <div className="map-content">
         <MapContainer
           center={[14.6426491,-90.5156846]}
@@ -88,25 +121,27 @@ function Map() {
           className="leaflet-map"
         >
           <TileLayer
-            url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">HOT</a>'
           />
           <ZoomControl position="bottomright" />
           {tiendas.map((tienda) => (
-            <Marker
-              key={tienda.id_tienda}
-              position={[parseFloat(tienda.latitud), parseFloat(tienda.longitud)]}
-              icon={icons[tienda.cadena] || L.Icon.Default.prototype.options}
-            >
-              <Popup>
-                <div>
-                  <h3>{tienda.cadena}</h3>
-                  <p>Tienda: {tienda.nombre}</p>
-                </div>
-              </Popup>
-            </Marker>
+            capaVisible[tienda.cadena] && (
+              <Marker
+                key={tienda.id_tienda}
+                position={[parseFloat(tienda.latitud), parseFloat(tienda.longitud)]}
+                icon={icons[tienda.cadena] || L.Icon.Default.prototype.options}
+              >
+                <Popup>
+                  <div>
+                    <h3>{tienda.cadena}</h3>
+                    <p>Tienda: {tienda.nombre}</p>
+                  </div>
+                </Popup>
+              </Marker>
+            )
           ))}
-          {usuarios.map((usuario) => (
+          {capaVisible['Usuarios'] && usuarios.map((usuario) => (
             <Marker
               key={usuario.id_usuario}
               position={[parseFloat(usuario.latitud), parseFloat(usuario.longitud)]}
