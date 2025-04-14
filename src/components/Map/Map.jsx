@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, ZoomControl, Marker, Popup } from 'react-leafl
 import 'leaflet/dist/leaflet.css';
 import { useState, useEffect } from 'react';
 import L from 'leaflet';
+import { API_BASE_URL } from '../../config';
 import kfcLogo from '../../assets/kfc_logo.svg';
 import pizzaHutLogo from '../../assets/pizza_hut_logo.svg';
 import starbucksLogo from '../../assets/starbucks_logo.svg';
@@ -50,7 +51,7 @@ function Map() {
   useEffect(() => {
     const fetchTiendas = async () => {
       try {
-        const response = await fetch('http://localhost:4000/api/v1/tiendas');
+        const response = await fetch(`${API_BASE_URL}/v1/tiendas`);
         const data = await response.json();
         if (data.status === 'success') {
           setTiendas(data.data.tiendas);
@@ -64,7 +65,7 @@ function Map() {
 
     const fetchUsuarios = async () => {
       try {
-        const response = await fetch('http://localhost:4000/api/v1/users');
+        const response = await fetch(`${API_BASE_URL}/v1/users`);
         const data = await response.json();
         if (data.status === 'success') {
           setUsuarios(data.data.users.filter(user => user.latitud !== '0' && user.longitud !== '0'));

@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import './Case.css';
+import { API_BASE_URL } from '../../config';
+import LoadingButton from '../common/LoadingButton';
 
 function Case() {
   const [ticket, setTicket] = useState('');
@@ -8,16 +10,17 @@ function Case() {
   const [users, setUsers] = useState([]);
   const [stores, setStores] = useState([]);
   const [message, setMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     // Cargar usuarios
-    fetch('http://localhost:4000/api/v1/users')
+    fetch(`${API_BASE_URL}/v1/users`)
       .then(response => response.json())
       .then(data => setUsers(data.data.users))
       .catch(error => console.error('Error cargando usuarios:', error));
 
     // Cargar tiendas
-    fetch('http://localhost:4000/api/v1/tiendas')
+    fetch(`${API_BASE_URL}/v1/tiendas`)
       .then(response => response.json())
       .then(data => setStores(data.data.tiendas))
       .catch(error => console.error('Error cargando tiendas:', error));
@@ -25,8 +28,9 @@ function Case() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     try {
-      const response = await fetch('http://localhost:4000/api/v1/casos', {
+      const response = await fetch(`${API_BASE_URL}/v1/casos`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -49,6 +53,8 @@ function Case() {
     } catch (error) {
       setMessage('Error al conectar con el servidor');
       console.error('Error:', error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -101,7 +107,9 @@ function Case() {
             </select>
           </div>
 
-          <button type="submit">Agregar Caso</button>
+          <LoadingButton type="submit" isLoading={isSubmitting}>
+            Agregar Caso
+          </LoadingButton>
         </form>
 
         {message && <p className="message">{message}</p>}

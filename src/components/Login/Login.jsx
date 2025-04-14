@@ -2,18 +2,25 @@ import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import './Login.css';
 import logo from '../../assets/premium_logo.webp';
+import LoadingButton from '../common/LoadingButton';
 
 export function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const { login, error } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const success = await login(username, password);
-    if (!success) {
-      // El error ya está manejado en el contexto
-      return;
+    setIsLoading(true);
+    try {
+      const success = await login(username, password);
+      if (!success) {
+        // El error ya está manejado en el contexto
+        return;
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -42,9 +49,13 @@ export function Login() {
             />
           </div>
           {error && <div className="error-message">{error}</div>}
-          <button type="submit" className="login-button">
+          <LoadingButton
+            type="submit"
+            className="login-button"
+            isLoading={isLoading}
+          >
             Ingresar
-          </button>
+          </LoadingButton>
         </form>
       </div>
     </div>

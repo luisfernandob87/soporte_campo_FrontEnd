@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import './User.css';
+import { API_BASE_URL } from '../../config';
 
 function User() {
   const [formData, setFormData] = useState({
@@ -35,7 +36,7 @@ function User() {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch('http://localhost:4000/api/v1/users');
+      const response = await fetch(`${API_BASE_URL}/v1/users`);
       const data = await response.json();
       if (data.status === 'success') {
         setUsers(data.data.users);
@@ -53,7 +54,7 @@ function User() {
       return;
     }
     try {
-      const response = await fetch('http://localhost:4000/api/v1/users', {
+      const response = await fetch(`${API_BASE_URL}/v1/users`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -87,7 +88,7 @@ function User() {
       if (editingUser.password) {
         userData.password = editingUser.password;
       }
-      const response = await fetch(`http://localhost:4000/api/v1/users/${editingUser.id_usuario}`, {
+      const response = await fetch(`${API_BASE_URL}/v1/users/${editingUser.id_usuario}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -109,7 +110,7 @@ function User() {
 
   const handleDelete = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/api/v1/users/${selectedUser.id_usuario}`, {
+      const response = await fetch(`${API_BASE_URL}/v1/users/${selectedUser.id_usuario}`, {
         method: 'DELETE'
       });
 
@@ -179,10 +180,7 @@ function User() {
             )}
             <button type="submit">Crear Usuario</button>
           </form>
-        </div>
-      </div>
-
-      <div className="user-section">
+          <div className="user-section">
         <h2>Usuarios Existentes</h2>
         <div className="table-container">
           <table>
@@ -226,6 +224,10 @@ function User() {
           </table>
         </div>
       </div>
+        </div>
+      </div>
+
+
 
       {showModal && (
         <div className="modal">

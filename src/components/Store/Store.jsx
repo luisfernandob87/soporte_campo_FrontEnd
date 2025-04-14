@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import './Store.css';
+import { API_BASE_URL } from '../../config';
+import LoadingButton from '../common/LoadingButton';
 
 function Store() {
   const [formData, setFormData] = useState({
@@ -12,10 +14,12 @@ function Store() {
   const [stores, setStores] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeletingId, setIsDeletingId] = useState(null);
 
   const fetchStores = async () => {
     try {
-      const response = await fetch('http://localhost:4000/api/v1/tiendas');
+      const response = await fetch(`${API_BASE_URL}/v1/tiendas`);
       if (response.ok) {
         const data = await response.json();
         setStores(data.data.tiendas);
@@ -39,10 +43,11 @@ function Store() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     try {
       const url = isEditing 
-        ? `http://localhost:4000/api/v1/tiendas/${editingId}`
-        : 'http://localhost:4000/api/v1/tiendas';
+        ? `${API_BASE_URL}/v1/tiendas/${editingId}`
+        : `${API_BASE_URL}/v1/tiendas`;
       
       const method = isEditing ? 'PATCH' : 'POST';
       
@@ -71,6 +76,8 @@ function Store() {
     } catch (error) {
       setMessage('Error de conexión');
       console.error('Error:', error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -87,8 +94,9 @@ function Store() {
 
   const handleDelete = async (id_tienda) => {
     if (window.confirm('¿Está seguro de que desea eliminar esta tienda?')) {
+      setIsDeletingId(id_tienda);
       try {
-        const response = await fetch(`http://localhost:4000/api/v1/tiendas/${id_tienda}`, {
+        const response = await fetch(`${API_BASE_URL}/v1/tiendas/${id_tienda}`, {
           method: 'DELETE',
         });
 
@@ -101,6 +109,8 @@ function Store() {
       } catch (error) {
         setMessage('Error de conexión');
         console.error('Error:', error);
+      } finally {
+        setIsDeletingId(null);
       }
     }
   };
@@ -153,9 +163,16 @@ function Store() {
               required
             />
           </div>
-          <button type="submit">{isEditing ? 'Actualizar Tienda' : 'Agregar Tienda'}</button>
+          <LoadingButton
+            type="submit"
+            isLoading={isSubmitting}
+          >
+            {isEditing ? 'Actualizar Tienda' : 'Agregar Tienda'}
+          </LoadingButton>
           {isEditing && (
-            <button type="button" onClick={() => {
+            <LoadingButton
+              type="button"
+              onClick={() => {
               setIsEditing(false);
               setEditingId(null);
               setFormData({
@@ -164,7 +181,10 @@ function Store() {
                 latitud: '',
                 longitud: ''
               });
-            }}>Cancelar Edición</button>
+            }}
+            >
+              Cancelar Edición
+            </LoadingButton>
           )}
         </form>
         {message && <p className="message">{message}</p>}
@@ -189,8 +209,18 @@ function Store() {
                   <td>{store.latitud}</td>
                   <td>{store.longitud}</td>
                   <td>
-                    <button onClick={() => handleEdit(store)}>Editar</button>
-                    <button onClick={() => handleDelete(store.id_tienda)}>Eliminar</button>
+                    <LoadingButton
+                      onClick={() => handleEdit(store)}
+                      isLoading={isSubmitting}
+                    >
+                      Editar
+                    </LoadingButton>
+                    <LoadingButton
+                      onClick={() => handleDelete(store.id_tienda)}
+                      isLoading={isDeletingId === store.id_tienda}
+                    >
+                      Eliminar
+                    </LoadingButton>
                   </td>
                 </tr>
               ))}

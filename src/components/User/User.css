@@ -120,12 +120,12 @@ tr:hover {
   max-width: 500px;
 }
 
-.button-group {
+/* .button-group {
   display: flex;
   gap: 10px;
   justify-content: flex-end;
   margin-top: 20px;
-}
+} */
 
 .button-group button {
   width: auto;
