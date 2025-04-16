@@ -8,6 +8,7 @@ import kfcLogo from '../../assets/kfc_logo.svg';
 import pizzaHutLogo from '../../assets/pizza_hut_logo.png';
 import starbucksLogo from '../../assets/starbucks_logo.svg';
 import wendysLogo from '../../assets/wendys_logo.png';
+import chinaWokLogo from '../../assets/china_Wok_logo.png';
 import { format } from 'date-fns';
 
 // Configurar el ícono personalizado
@@ -32,7 +33,8 @@ const icons = {
   'KFC': createCustomIcon(kfcLogo),
   'Pizza Hut': createCustomIcon(pizzaHutLogo),
   'Starbucks': createCustomIcon(starbucksLogo),
-  "Wendy's": createCustomIcon(wendysLogo)
+  "Wendy's": createCustomIcon(wendysLogo),
+  'China Wok': createCustomIcon(chinaWokLogo)
 };
 
 function Map() {
@@ -43,6 +45,7 @@ function Map() {
     'Pizza Hut': true,
     'Starbucks': true,
     "Wendy's": true,
+    'China Wok': true,
     'Usuarios': true
   });
 

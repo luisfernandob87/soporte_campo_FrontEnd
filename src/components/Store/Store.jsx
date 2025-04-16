@@ -121,15 +121,22 @@ function Store() {
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="cadena">Cadena:</label>
-            <input
-              type="text"
+            <select
               id="cadena"
               name="cadena"
               value={formData.cadena}
               onChange={handleChange}
               required
-            />
+            >
+              <option value="">- Seleccione -</option>
+              <option value="China Wok">China Wok</option>
+              <option value="KFC">KFC</option>
+              <option value="Pizza Hut">Pizza Hut</option>
+              <option value="Starbucks">Starbucks</option>
+              <option value="Wendy's">Wendy's</option>
+            </select>
           </div>
+
           <div className="form-group">
             <label htmlFor="nombre">Nombre:</label>
             <input
