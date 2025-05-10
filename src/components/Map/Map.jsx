@@ -9,6 +9,7 @@ import pizzaHutLogo from '../../assets/pizza_hut_logo.png';
 import starbucksLogo from '../../assets/starbucks_logo.svg';
 import wendysLogo from '../../assets/wendys_logo.png';
 import chinaWokLogo from '../../assets/china_Wok_logo.png';
+import oficinas from '../../assets/agencia_icono.png';
 import { format } from 'date-fns';
 
 // Configurar el ícono personalizado
@@ -34,7 +35,8 @@ const icons = {
   'Pizza Hut': createCustomIcon(pizzaHutLogo),
   'Starbucks': createCustomIcon(starbucksLogo),
   "Wendy's": createCustomIcon(wendysLogo),
-  'China Wok': createCustomIcon(chinaWokLogo)
+  'China Wok': createCustomIcon(chinaWokLogo),
+  'Oficinas': createCustomIcon(oficinas)
 };
 
 function Map() {
@@ -46,7 +48,8 @@ function Map() {
     'Starbucks': true,
     "Wendy's": true,
     'China Wok': true,
-    'Usuarios': true
+    'Usuarios': true,
+    'Oficinas': true
   });
 
   const userIcon = L.icon({
@@ -138,7 +141,7 @@ function Map() {
                 <Popup>
                   <div>
                     <h3>{tienda.cadena}</h3>
-                    <p>Tienda: {tienda.nombre}</p>
+                    <p>Nombre: {tienda.nombre}</p>
                   </div>
                 </Popup>
               </Marker>

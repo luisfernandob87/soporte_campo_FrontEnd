@@ -3,6 +3,89 @@ import './Case.css';
 import { API_BASE_URL } from '../../config';
 import LoadingButton from '../common/LoadingButton';
 
+const SearchableSelect = ({ options, value, onChange, placeholder, labelKey, valueKey }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+
+  const filteredOptions = options.filter(option =>
+    option[labelKey].toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const selectedOption = options.find(option => option[valueKey].toString() === value);
+
+  const handleInputClick = () => {
+    setIsOpen(!isOpen);
+    setSearchTerm('');
+    setHighlightedIndex(-1);
+  };
+
+  const handleOptionClick = (option) => {
+    onChange(option[valueKey].toString());
+    setIsOpen(false);
+    setSearchTerm('');
+  };
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    setHighlightedIndex(-1);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setHighlightedIndex(prev => 
+        prev < filteredOptions.length - 1 ? prev + 1 : prev
+      );
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setHighlightedIndex(prev => prev > 0 ? prev - 1 : prev);
+    } else if (e.key === 'Enter' && highlightedIndex >= 0) {
+      e.preventDefault();
+      handleOptionClick(filteredOptions[highlightedIndex]);
+    } else if (e.key === 'Escape') {
+      setIsOpen(false);
+    }
+  };
+
+  return (
+    <div className="searchable-select" onKeyDown={handleKeyDown}>
+      <div 
+        className="select-input" 
+        onClick={handleInputClick}
+      >
+        {selectedOption ? selectedOption[labelKey] : placeholder}
+      </div>
+      {isOpen && (
+        <div className="select-dropdown">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={handleSearch}
+            placeholder="Buscar..."
+            className="select-search"
+            autoFocus
+          />
+          <div className="select-options">
+            {filteredOptions.map((option, index) => (
+              <div
+                key={option[valueKey]}
+                className={`select-option ${highlightedIndex === index ? 'highlighted' : ''}`}
+                onClick={() => handleOptionClick(option)}
+              >
+                {option[labelKey]}
+              </div>
+            ))}
+            {filteredOptions.length === 0 && (
+              <div className="no-options">No se encontraron resultados</div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 function Case() {
   const [ticket, setTicket] = useState('');
   const [selectedUser, setSelectedUser] = useState('');
@@ -75,36 +158,26 @@ function Case() {
 
           <div className="form-group">
             <label htmlFor="user">Usuario:</label>
-            <select
-              id="user"
+            <SearchableSelect
+              options={users}
               value={selectedUser}
-              onChange={(e) => setSelectedUser(e.target.value)}
-              required
-            >
-              <option value="">Seleccione un usuario</option>
-              {users.map(user => (
-                <option key={user.id_usuario} value={user.id_usuario}>
-                  {user.nombre}
-                </option>
-              ))}
-            </select>
+              onChange={setSelectedUser}
+              placeholder="Seleccione un usuario"
+              labelKey="nombre"
+              valueKey="id_usuario"
+            />
           </div>
 
           <div className="form-group">
             <label htmlFor="store">Tienda:</label>
-            <select
-              id="store"
+            <SearchableSelect
+              options={stores}
               value={selectedStore}
-              onChange={(e) => setSelectedStore(e.target.value)}
-              required
-            >
-              <option value="">Seleccione una tienda</option>
-              {stores.map(store => (
-                <option key={store.id_tienda} value={store.id_tienda}>
-                  {store.cadena} - {store.nombre}
-                </option>
-              ))}
-            </select>
+              onChange={setSelectedStore}
+              placeholder="Seleccione una tienda"
+              labelKey="nombre"
+              valueKey="id_tienda"
+            />
           </div>
 
           <LoadingButton type="submit" isLoading={isSubmitting}>

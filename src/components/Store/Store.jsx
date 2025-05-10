@@ -134,6 +134,7 @@ function Store() {
               <option value="Pizza Hut">Pizza Hut</option>
               <option value="Starbucks">Starbucks</option>
               <option value="Wendy's">Wendy's</option>
+              <option value="Oficinas">Oficinas</option>
             </select>
           </div>
 
